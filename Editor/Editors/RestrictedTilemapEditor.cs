@@ -23,18 +23,30 @@ namespace skner.DualGrid.Editor
             EditorGUILayout.PropertyField(color, new GUIContent("Color"));
 
             // Check if the Tilemap is part of a DualGridTilemapModule
-            bool isRenderTilemap = tilemap.GetComponentInImmediateParent<DualGridTilemapModule>() != null;
+            var dataTileMap = tilemap.GetComponentInImmediateParent<DualGridTilemapModule>();
+            bool isRenderTilemap = dataTileMap != null;
             if (isRenderTilemap)
             {
                 GUILayout.Space(2);
                 EditorGUILayout.HelpBox("Editing the position and orientation of a RenderTilemap is restricted.", MessageType.Info);
+                
+                //If selecting a render tilemap then copy the values of the data tile map
+                tilemap.tileAnchor = dataTileMap.DataTilemap.tileAnchor;
+                tilemap.orientation = dataTileMap.DataTilemap.orientation;
                 GUILayout.Space(2);
             }
 
             using (new EditorGUI.DisabledScope(isRenderTilemap))
             {
-                EditorGUILayout.Vector3Field("Tile Anchor", tilemap.tileAnchor);
-                EditorGUILayout.EnumPopup("Orientation", tilemap.orientation);
+                //Allow edits to the tile anchor and orientation if selecting a data tilemap
+                tilemap.tileAnchor = EditorGUILayout.Vector3Field("Tile Anchor", tilemap.tileAnchor);
+                tilemap.orientation = (Tilemap.Orientation)EditorGUILayout.EnumPopup("Orientation", tilemap.orientation);
+                if (dataTileMap == null)
+                {
+                    var renderTilemap = tilemap.GetComponent<DualGridTilemapModule>().RenderTilemap;
+                    renderTilemap.tileAnchor = tilemap.tileAnchor;
+                    renderTilemap.orientation = tilemap.orientation;
+                }
             }
 
             using (new EditorGUI.DisabledScope(true))

@@ -20,10 +20,12 @@ namespace skner.DualGrid.Editor
             Transform transform = (Transform)target;
 
             // Check if this transform is from the RenderTilemap of a DualGridTilemapModule
-            if (transform.GetComponentInImmediateParent<DualGridTilemapModule>() != null)
+            DualGridTilemapModule module = transform.GetComponentInImmediateParent<DualGridTilemapModule>();
+            if (module != null)
             {
                 EditorGUILayout.HelpBox($"Editing is disabled on a RenderTilemap. The transform is managed by the {nameof(DualGridTilemapModule)}.", MessageType.Info);
                 GUI.enabled = false;
+                transform.position = -1 * module.DataTilemap.tileAnchor;
                 _defaultEditor.OnInspectorGUI();
                 GUI.enabled = true;
             }
