@@ -255,11 +255,37 @@ namespace skner.DualGrid.Editor
 
             var squareSizeX = tilemap.cellSize.x * tilemap.transform.lossyScale.x;
             var squareSizeY = tilemap.cellSize.y * tilemap.transform.lossyScale.y;
-
+            
             Vector3 topLeft = tileCenter + new Vector3(-squareSizeX / 2, squareSizeY / 2, 0);
             Vector3 topRight = tileCenter + new Vector3(squareSizeX / 2, squareSizeY / 2, 0);
             Vector3 bottomLeft = tileCenter + new Vector3(-squareSizeX / 2, -squareSizeY / 2, 0);
             Vector3 bottomRight = tileCenter + new Vector3(squareSizeX / 2, -squareSizeY / 2, 0);
+
+            switch (tilemap.orientation)
+            {
+                case Tilemap.Orientation.XY:
+                case Tilemap.Orientation.YX:
+                    topLeft = tileCenter + new Vector3(-squareSizeX / 2, squareSizeY / 2, 0);
+                    topRight = tileCenter + new Vector3(squareSizeX / 2, squareSizeY / 2, 0);
+                    bottomLeft = tileCenter + new Vector3(-squareSizeX / 2, -squareSizeY / 2, 0);
+                    bottomRight = tileCenter + new Vector3(squareSizeX / 2, -squareSizeY / 2, 0);
+                    break;
+                case Tilemap.Orientation.XZ:
+                case Tilemap.Orientation.ZX:
+                    topLeft = tileCenter + new Vector3(-squareSizeX / 2, 0, squareSizeY / 2);
+                    topRight = tileCenter + new Vector3(squareSizeX / 2, 0, squareSizeY / 2);
+                    bottomLeft = tileCenter + new Vector3(-squareSizeX / 2, 0, -squareSizeY / 2);
+                    bottomRight = tileCenter + new Vector3(squareSizeX / 2, 0, -squareSizeY / 2);
+                    break;
+                case Tilemap.Orientation.YZ:
+                case Tilemap.Orientation.ZY:
+                    topLeft = tileCenter + new Vector3(0, -squareSizeX / 2, squareSizeY / 2);
+                    topRight = tileCenter + new Vector3(0,squareSizeX / 2, squareSizeY / 2);
+                    bottomLeft = tileCenter + new Vector3(0, -squareSizeX / 2, -squareSizeY / 2);
+                    bottomRight = tileCenter + new Vector3(0, squareSizeX / 2, -squareSizeY / 2);
+                    break;
+            }
+
 
             Handles.DrawLine(topLeft, topRight, thickness);
             Handles.DrawLine(topRight, bottomRight, thickness);
@@ -280,7 +306,28 @@ namespace skner.DualGrid.Editor
                     Vector3Int dataTileOffset = dataTilePosition - renderTilePosition;
                     Vector3Int neighborOffset = DualGridUtils.ConvertDataTileOffsetToNeighborOffset(dataTileOffset);
 
-                    Vector3 corner = tileCenter + new Vector3(neighborOffset.x * renderTilemap.cellSize.x * 0.3f, neighborOffset.y * renderTilemap.cellSize.y * 0.3f, 0f);
+                    Vector3 cornerDirection = Vector3.zero;
+                    
+                    switch (dataTilemap.orientation)
+                    {
+                        case Tilemap.Orientation.YX:
+                        case Tilemap.Orientation.XY:
+                            cornerDirection = new Vector3(neighborOffset.x * renderTilemap.cellSize.x * 0.3f,
+                                neighborOffset.y * renderTilemap.cellSize.y * 0.3f,0);
+                            break;
+                        case Tilemap.Orientation.ZX:
+                        case Tilemap.Orientation.XZ:
+                            cornerDirection = new Vector3(neighborOffset.x * renderTilemap.cellSize.x * 0.3f,
+                                0, neighborOffset.y * renderTilemap.cellSize.y * 0.3f);
+                            break;
+                        case Tilemap.Orientation.YZ:
+                        case Tilemap.Orientation.ZY:
+                            cornerDirection = new Vector3(0,
+                                neighborOffset.x * renderTilemap.cellSize.x * 0.3f, neighborOffset.y * renderTilemap.cellSize.y * 0.3f);
+                            break;
+                    }
+                    
+                    Vector3 corner = tileCenter + cornerDirection;
 
                     DrawArrow(tileCenter, corner);
                 }

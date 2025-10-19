@@ -43,9 +43,12 @@ namespace skner.DualGrid.Editor
                 tilemap.orientation = (Tilemap.Orientation)EditorGUILayout.EnumPopup("Orientation", tilemap.orientation);
                 if (dataTileMap == null)
                 {
-                    var renderTilemap = tilemap.GetComponent<DualGridTilemapModule>().RenderTilemap;
-                    renderTilemap.tileAnchor = tilemap.tileAnchor;
-                    renderTilemap.orientation = tilemap.orientation;
+                    var module = tilemap.GetComponent<DualGridTilemapModule>();
+                    if (module != null){
+                        var renderTilemap = module.RenderTilemap;
+                        renderTilemap.tileAnchor = tilemap.tileAnchor;
+                        renderTilemap.orientation = tilemap.orientation;
+                    }
                 }
             }
 
