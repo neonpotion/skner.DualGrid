@@ -61,6 +61,7 @@ namespace skner.DualGrid
 
         private void OnEnable()
         {
+            RefreshRenderTilemap();
             Tilemap.tilemapTileChanged += HandleTilemapChange;
         }
 
