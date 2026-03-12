@@ -67,18 +67,12 @@ namespace skner.DualGrid
         //Fix for gameObject rotation when orientation is XZ
         public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
         {
-            var rotationOverride = Vector3.zero;
-            if (go != null)
-            {
-                rotationOverride = go.transform.eulerAngles;
-            }
-
             if( _dualGridTilemapModule.RenderTilemap.orientation == Tilemap.Orientation.XZ)
             {
                 var r = base.StartUp(position, tilemap, go);
                 if (go != null)
                 {
-                    go.transform.eulerAngles = rotationOverride;
+                    go.transform.eulerAngles = Vector3.zero;
                 }
 
                 return r;
