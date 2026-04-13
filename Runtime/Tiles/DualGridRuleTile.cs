@@ -67,7 +67,7 @@ namespace skner.DualGrid
         //Fix for gameObject rotation when orientation is XZ
         public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
         {
-            if( _dualGridTilemapModule.RenderTilemap.orientation == Tilemap.Orientation.XZ)
+            if(_dualGridTilemapModule != null && _dualGridTilemapModule.RenderTilemap.orientation == Tilemap.Orientation.XZ)
             {
                 var r = base.StartUp(position, tilemap, go);
                 if (go != null)
